@@ -1,6 +1,7 @@
-const { GiveawaysManager } = require("discord-giveaways");
+const { GiveawaysManager, Giveaway } = require("discord-giveaways");
+const { MessageEmbed, Interaction } = require("discord.js");
 const Enmap = require("enmap");
-const client = require('../index')
+const client = require("../index");
 const giveawayDB = new Enmap({ name: "giveaways" });
 
 const GiveawayManagerWithOwnDatabase = class extends GiveawaysManager {
@@ -27,6 +28,33 @@ const GiveawayManagerWithOwnDatabase = class extends GiveawaysManager {
       this.giveawaysManager.getAllGiveaways()
     );
   }
+  /**
+   * @param {Giveaway} giveaway
+   */
+  generateMainEmbed(giveaway) {
+    let mainEmbed = new MessageEmbed()
+      .setColor("RANDOM")
+      .setTitle(`Giveaway Started`)
+      .setDescription(
+        `>>> ** [React to Enter in Giveaway](${giveaway.messageURL}) **`
+      )
+      .addFields([
+        {
+          name: `**🎁 Prize **`,
+          value: `>>> ${giveaway.prize}`,
+        },
+        {
+          name: `**⏲️  Duration **`,
+          value: `>>> ${giveaway.duration.toLocaleString()}`,
+        },
+        {
+          name: `**👍 Hosted By **`,
+          value: `>>> ${giveaway.hostedBy}`,
+        },
+      ]);
+
+    return mainEmbed;
+  }
 };
 
 const manager = new GiveawayManagerWithOwnDatabase(client, {
@@ -40,7 +68,12 @@ const manager = new GiveawayManagerWithOwnDatabase(client, {
 
 module.exports = manager;
 
+manager.on("giveawayReactionAdded", async (giveaway, member) => {
+  member.send(
+    `Your Entry Successfully Accepted \n Giveaway in <#${giveaway.channelId}>`
+  );
+});
 
-manager.on('giveawayReactionAdded',async (giveaway , member) => {
-  member.send(`Your Entry Successfully Accepted \n Giveaway in <#${giveaway.channelId}>`)
-})
+manager.on("giveawayReactionRemoved", async (giveaway, member, reaction) => {
+  member.send(`Your Entry is Rejected...`);
+});

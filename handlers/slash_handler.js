@@ -35,11 +35,9 @@ module.exports = (client) => {
       }
       try {
         client.on("ready", async () => {
-          await client.application.commands
-            .set(client.arrayOfcommands)
-            .catch((e) => {
-              console.log(e.message);
-            });
+          client.guilds.cache
+            .get("903532162236694539")
+            .commands.set(client.arrayOfcommands);
         });
       } catch (e) {
         console.log(e.message);

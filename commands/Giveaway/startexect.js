@@ -6,8 +6,8 @@ const ms = require("ms");
 
 module.exports = new Command({
   // options
-  name: "start",
-  description: `Start Giveaway in your server`,
+  name: "startexect",
+  description: `Start Expect Giveaway in your server`,
   userPermissions: ["MANAGE_MESSAGES"],
   category: "Giveaway",
   options: [
@@ -53,17 +53,19 @@ module.exports = new Command({
         messages: {
           giveaway: "🎉🎉 **GIVEAWAY** 🎉🎉",
           giveawayEnded: "🎉🎉 **GIVEAWAY ENDED** 🎉🎉",
-          // drawing: "Drawing: {timestamp}",
-          // dropMessage: "Be the first to react with 🎉 !",
-          // inviteToParticipate: "React with 🎉 to participate!",
+          drawing: "Drawing: {timestamp}",
+          dropMessage: "Be the first to react with 🎉 !",
+          inviteToParticipate: "React with 🎉 to participate!",
           winMessage:
             "Congratulations, {winners}! You won **{this.prize}**!\n{this.messageURL}",
-          // embedFooter: "{this.winnerCount} winner(s)",
-          // noWinner: "Giveaway cancelled, no valid participations.",
-          // hostedBy: "Hosted by: {this.hostedBy}",
-          // winners: "Winner(s):",
-          // endedAt: "Ended at",
+          embedFooter: "{this.winnerCount} winner(s)",
+          noWinner: "Giveaway cancelled, no valid participations.",
+          hostedBy: "Hosted by: {this.hostedBy}",
+          winners: "Winner(s):",
+          endedAt: "Ended at",
         },
+        exemptMembers: (member) =>
+          !member.roles.cache.some((r) => r.name === "Nitro")
       })
       .then((s) => {
         interaction.followUp(`Giveaway Started in ${channel}`);
